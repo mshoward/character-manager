@@ -3,9 +3,9 @@
   import { Tabs, TabsContent, TabsList, TabsTrigger } from '$lib/components/ui/tabs';
   import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
   import { Button } from '$lib/components/ui/button';
+  import { Label } from '$lib/components/ui/label';
   import * as Select from '$lib/components/ui/select';
   import { Slider } from '$lib/components/ui/slider';
-  import { Label } from '$lib/components/ui/label';
   import { Textarea } from '$lib/components/ui/textarea';
   import { toast } from 'svelte-sonner';
   import { Dice6, Save } from 'lucide-svelte';
@@ -13,6 +13,7 @@
   export let character: V20DarkAgesCharacter;
   export let onSave: (updated: V20DarkAgesCharacter) => void;
 
+  // Dice roller state
   let dicePool = 5;
   let difficulty = 6;
   let rollResults: number[] = [];
@@ -34,7 +35,7 @@
     isBotch = successes === 0 && ones > 0;
 
     if (isBotch) {
-      toast.error("💀 BOTCH!", {
+      toast.error('💀 BOTCH!', {
         description: `${dicePool}d10 @ diff ${difficulty}`,
       });
     } else {
@@ -47,7 +48,9 @@
   function saveChanges() {
     character.updatedAt = new Date().toISOString();
     onSave(character);
-    toast.info('Saved to Chronicle', {description: `${character.name} updated.` });
+    toast.success('Saved to Chronicle', {
+      description: `${character.name} updated.`,
+    });
   }
 </script>
 
@@ -71,6 +74,7 @@
       <TabsTrigger value="notes">Notes</TabsTrigger>
     </TabsList>
 
+    <!-- (the rest of your tabs are unchanged and beautiful) -->
     <TabsContent value="overview" class="mt-8">
       <Card class="bg-zinc-900 border-zinc-800">
         <CardContent class="pt-8 grid grid-cols-3 gap-12 text-center">
@@ -172,9 +176,9 @@
       </Card>
     </TabsContent>
 
-    <TabsContent value="powers" class="mt-8 text-zinc-400">Disciplines coming next update</TabsContent>
+    <TabsContent value="powers" class="mt-8 text-zinc-400">Disciplines & full power lists coming in the next update.</TabsContent>
     <TabsContent value="notes" class="mt-8">
-      <Textarea bind:value={character.notes} placeholder="Scribe your secrets..." class="min-h-[300px] bg-zinc-950 border-zinc-800" />
+      <Textarea bind:value={character.notes} placeholder="Scribe your secrets, sins, and session notes here..." class="min-h-[300px] bg-zinc-950 border-zinc-800 text-lg" />
     </TabsContent>
   </Tabs>
 </div>
