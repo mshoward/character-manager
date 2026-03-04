@@ -56,6 +56,7 @@
   }
 
   function openSheet(char: V20DarkAgesCharacter) {
+    console.log('Opening Character sheet for:', char.name);
     selectedCharacter = { ...char };
     showSheet = true;
   }
@@ -113,40 +114,42 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {#each $characters as char (char.id)}
-        <Card on:click={() => openSheet(char)} class="cursor-pointer bg-zinc-900 border-zinc-800 hover:border-red-900/70 hover:scale-[1.02] transition-all duration-300">
-          <CardHeader>
-            <div class="flex items-center gap-4">
-              <div class="w-14 h-14 bg-zinc-800 rounded-full flex items-center justify-center">
-                <User class="h-7 w-7 text-red-500" />
+        <button type='button' on:click={() => openSheet(char)}>
+          <Card  class="cursor-pointer bg-zinc-900 border-zinc-800 hover:border-red-900/70 hover:scale-[1.02] transition-all duration-300">
+            <CardHeader>
+              <div class="flex items-center gap-4">
+                <div class="w-14 h-14 bg-zinc-800 rounded-full flex items-center justify-center">
+                  <User class="h-7 w-7 text-red-500" />
+                </div>
+                <div class="flex-1 min-w-0">
+                  <CardTitle class="text-2xl truncate">{char.name}</CardTitle>
+                  <CardDescription class="text-red-400">{char.clan} • Gen {char.generation}</CardDescription>
+                </div>
+                <div class="text-right">
+                  <span class="inline-block px-3 py-1 text-xs bg-emerald-900/70 text-emerald-400 rounded-full">
+                    {char.health}
+                  </span>
+                </div>
               </div>
-              <div class="flex-1 min-w-0">
-                <CardTitle class="text-2xl truncate">{char.name}</CardTitle>
-                <CardDescription class="text-red-400">{char.clan} • Gen {char.generation}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div class="grid grid-cols-3 gap-4 text-center text-sm">
+                <div>
+                  <div class="text-zinc-500">Blood</div>
+                  <div class="font-mono text-red-400">{char.bloodPool.current}/{char.bloodPool.max}</div>
+                </div>
+                <div>
+                  <div class="text-zinc-500">Will</div>
+                  <div class="font-mono">{char.willpower.current}/{char.willpower.max}</div>
+                </div>
+                <div>
+                  <div class="text-zinc-500">Road</div>
+                  <div class="font-mono text-amber-400">{char.roadRating}</div>
+                </div>
               </div>
-              <div class="text-right">
-                <span class="inline-block px-3 py-1 text-xs bg-emerald-900/70 text-emerald-400 rounded-full">
-                  {char.health}
-                </span>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div class="grid grid-cols-3 gap-4 text-center text-sm">
-              <div>
-                <div class="text-zinc-500">Blood</div>
-                <div class="font-mono text-red-400">{char.bloodPool.current}/{char.bloodPool.max}</div>
-              </div>
-              <div>
-                <div class="text-zinc-500">Will</div>
-                <div class="font-mono">{char.willpower.current}/{char.willpower.max}</div>
-              </div>
-              <div>
-                <div class="text-zinc-500">Road</div>
-                <div class="font-mono text-amber-400">{char.roadRating}</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </button>
       {/each}
 
       {#if $characters.length === 0}

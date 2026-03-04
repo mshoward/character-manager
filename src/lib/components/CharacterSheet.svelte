@@ -4,7 +4,6 @@
   import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
   import { Button } from '$lib/components/ui/button';
   import { Label } from '$lib/components/ui/label';
-  import * as Select from '$lib/components/ui/select';
   import { Slider } from '$lib/components/ui/slider';
   import { Textarea } from '$lib/components/ui/textarea';
   import { toast } from 'svelte-sonner';
@@ -14,7 +13,7 @@
   export let onSave: (updated: V20DarkAgesCharacter) => void;
 
   // Dice roller
-  let dicePool = 5;
+  let dicePool = [5];           // ← must be array for shadcn Slider
   let difficulty = 6;
   let rollResults: number[] = [];
   let successes = 0;
@@ -25,7 +24,7 @@
     successes = 0;
     let ones = 0;
 
-    for (let i = 0; i < dicePool; i++) {
+    for (let i = 0; i < dicePool[0]; i++) {
       const roll = Math.floor(Math.random() * 10) + 1;
       rollResults.push(roll);
       if (roll === 1) ones++;
@@ -35,9 +34,9 @@
     isBotch = successes === 0 && ones > 0;
 
     if (isBotch) {
-      toast.error('💀 BOTCH!', { description: `${dicePool}d10 @ diff ${difficulty}` });
+      toast.error('💀 BOTCH!', { description: `${dicePool[0]}d10 @ diff ${difficulty}` });
     } else {
-      toast.success(`${successes} Success${successes === 1 ? '' : 'es'}`, { description: `${dicePool}d10 @ diff ${difficulty}` });
+      toast.success(`${successes} Success${successes === 1 ? '' : 'es'}`, { description: `${dicePool[0]}d10 @ diff ${difficulty}` });
     }
   }
 
@@ -122,33 +121,36 @@
           </CardTitle>
         </CardHeader>
         <CardContent class="pt-8 space-y-10">
-          <div class="grid grid-cols-2 gap-12">
-            <div>
-              <Label for="dice-pool" class="block text-sm text-zinc-400 mb-4">Dice Pool</Label>
-              <div class="flex items-center gap-6">
-                <Slider id="dice-pool" bind:value={dicePool} min={1} max={20} step={1} class="flex-1" />
-                <div class="font-mono text-5xl text-red-400 w-20 text-right">{dicePool}</div>
-              </div>
+          <form on:submit={rollDice}>
+            <div class="grid grid-cols-2 gap-12">
+                <div>
+                <Label for="dice-pool" class="block text-sm text-zinc-400 mb-4">Dice Pool</Label>
+                <div class="flex items-center gap-6">
+                    <Slider id="dice-pool" bind:value={dicePool} min={1} max={20} step={1} class="flex-1" />
+                    <div class="font-mono text-5xl text-red-400 w-20 text-right">{dicePool[0]}</div>
+                </div>
+                </div>
+                <div>
+                <Label for="difficulty" class="block text-sm text-zinc-400 mb-4">Difficulty</Label>
+                <select 
+                    id="difficulty" 
+                    bind:value={difficulty}
+                    class="w-full h-14 bg-zinc-900 border border-zinc-700 rounded-lg px-4 text-lg focus:outline-none focus:border-red-600"
+                >
+                    <option value={4}>4</option>
+                    <option value={5}>5</option>
+                    <option value={6}>6</option>
+                    <option value={7}>7</option>
+                    <option value={8}>8</option>
+                    <option value={9}>9</option>
+                </select>
+                </div>
             </div>
-            <div>
-              <Label for="difficulty" class="block text-sm text-zinc-400 mb-4">Difficulty</Label>
-              <Select.Root bind:value={difficulty}>
-                <Select.Trigger id="difficulty" class="w-full h-14 text-lg">
-                  <Select.Value />
-                </Select.Trigger>
-                <Select.Content>
-                  {#each [4,5,6,7,8,9] as d}
-                    <Select.Item value={d}>{d}</Select.Item>
-                  {/each}
-                </Select.Content>
-              </Select.Root>
-            </div>
-          </div>
 
-          <Button on:click={rollDice} size="lg" class="w-full h-16 text-xl bg-red-600 hover:bg-red-700">
-            ROLL THE BONES
-          </Button>
-
+            <Button type=submit size="lg" class="w-full h-16 text-xl bg-red-600 hover:bg-red-700">
+                ROLL THE BONES
+            </Button>
+          </form>
           {#if rollResults.length > 0}
             <div class="bg-zinc-950 border border-zinc-800 rounded-2xl p-10">
               <div class="flex flex-wrap gap-4 justify-center mb-8">
@@ -169,7 +171,7 @@
       </Card>
     </TabsContent>
 
-    <TabsContent value="powers" class="mt-8 text-zinc-400">Disciplines coming next update.</TabsContent>
+    <TabsContent value="powers" class="mt-8 text-zinc-400">Disciplines coming in the next update.</TabsContent>
     <TabsContent value="notes" class="mt-8">
       <Textarea bind:value={character.notes} placeholder="Scribe your secrets..." class="min-h-[300px] bg-zinc-950 border-zinc-800 text-lg" />
     </TabsContent>
