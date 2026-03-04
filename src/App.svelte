@@ -52,10 +52,7 @@
     newCharName = '';
     showNewDialog = false;
 
-    toast({
-      title: 'Embraced',
-      description: `${newChar.name} has been brought into the night.`,
-    });
+    toast.success("Embraced", {description: `${newChar.name} has been brought into the night.`, duration: 5000} );
   }
 
   function openSheet(char: V20DarkAgesCharacter) {

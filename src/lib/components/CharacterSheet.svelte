@@ -33,17 +33,21 @@
 
     isBotch = successes === 0 && ones > 0;
 
-    toast({
-      title: isBotch ? '💀 BOTCH!' : `${successes} Success${successes === 1 ? '' : 'es'}`,
-      description: `${dicePool}d10 @ diff ${difficulty}`,
-      variant: isBotch ? 'destructive' : 'default'
-    });
+    if (isBotch) {
+      toast.error("💀 BOTCH!", {
+        description: `${dicePool}d10 @ diff ${difficulty}`,
+      });
+    } else {
+      toast.success(`${successes} Success${successes === 1 ? '' : 'es'}`, {
+        description: `${dicePool}d10 @ diff ${difficulty}`,
+      });
+    }
   }
 
   function saveChanges() {
     character.updatedAt = new Date().toISOString();
     onSave(character);
-    toast({ title: 'Saved to Chronicle', description: `${character.name} updated.` });
+    toast.info('Saved to Chronicle', {description: `${character.name} updated.` });
   }
 </script>
 
