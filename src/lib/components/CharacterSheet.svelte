@@ -3,8 +3,9 @@
   import { Tabs, TabsContent, TabsList, TabsTrigger } from '$lib/components/ui/tabs';
   import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
   import { Button } from '$lib/components/ui/button';
+  import * as Select from '$lib/components/ui/select';
+  import { Slider } from '$lib/components/ui/slider';
   import { Label } from '$lib/components/ui/label';
-  import * as Select from '$lib/components/ui/select';  import { Slider } from '$lib/components/ui/slider';
   import { Textarea } from '$lib/components/ui/textarea';
   import { toast } from 'svelte-sonner';
   import { Dice6, Save } from 'lucide-svelte';
@@ -12,7 +13,6 @@
   export let character: V20DarkAgesCharacter;
   export let onSave: (updated: V20DarkAgesCharacter) => void;
 
-  // Dice roller state
   let dicePool = 5;
   let difficulty = 6;
   let rollResults: number[] = [];
@@ -123,25 +123,25 @@
         <CardContent class="pt-8 space-y-10">
           <div class="grid grid-cols-2 gap-12">
             <div>
-                <Label for="dice-pool" class="block text-sm text-zinc-400 mb-4">Dice Pool</Label>
-                <div class="flex items-center gap-6">
+              <Label for="dice-pool" class="block text-sm text-zinc-400 mb-4">Dice Pool</Label>
+              <div class="flex items-center gap-6">
                 <Slider id="dice-pool" bind:value={dicePool} min={1} max={20} step={1} class="flex-1" />
                 <div class="font-mono text-5xl text-red-400 w-20 text-right">{dicePool}</div>
-                </div>
-            </div>
-              <div>
-                <Label for="difficulty" class="block text-sm text-zinc-400 mb-4">Difficulty</Label>
-                <Select.Root bind:value={difficulty}>
-                    <Select.Trigger id="difficulty" class="w-full h-14 text-lg">
-                    <Select.Value />
-                    </Select.Trigger>
-                    <Select.Content>
-                    {#each [4,5,6,7,8,9] as d}
-                        <Select.Item value={d}>{d}</Select.Item>
-                    {/each}
-                    </Select.Content>
-                </Select.Root>
               </div>
+            </div>
+            <div>
+              <Label for="difficulty" class="block text-sm text-zinc-400 mb-4">Difficulty</Label>
+              <Select.Root bind:value={difficulty}>
+                <Select.Trigger id="difficulty" class="w-full h-14 text-lg">
+                  <Select.Value />
+                </Select.Trigger>
+                <Select.Content>
+                  {#each [4,5,6,7,8,9] as d}
+                    <Select.Item value={d}>{d}</Select.Item>
+                  {/each}
+                </Select.Content>
+              </Select.Root>
+            </div>
           </div>
 
           <Button on:click={rollDice} size="lg" class="w-full h-16 text-xl bg-red-600 hover:bg-red-700">
@@ -168,9 +168,9 @@
       </Card>
     </TabsContent>
 
-    <TabsContent value="powers" class="mt-8 text-zinc-400">Disciplines & full power lists coming in the next update (we’ll add them together).</TabsContent>
+    <TabsContent value="powers" class="mt-8 text-zinc-400">Disciplines coming next update</TabsContent>
     <TabsContent value="notes" class="mt-8">
-      <Textarea bind:value={character.notes} placeholder="Scribe your secrets, sins, and session notes here..." class="min-h-[300px] bg-zinc-950 border-zinc-800 text-lg" />
+      <Textarea bind:value={character.notes} placeholder="Scribe your secrets..." class="min-h-[300px] bg-zinc-950 border-zinc-800" />
     </TabsContent>
   </Tabs>
 </div>

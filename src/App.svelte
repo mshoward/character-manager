@@ -1,9 +1,9 @@
 <script lang="ts">
   import { characters } from '$lib/stores/characters';
   import type { V20DarkAgesCharacter } from '$lib/types/character';
-  import { Button } from '$lib/components/ui/button';
+  import * as Dialog from '$lib/components/ui/dialog';
+  import { Button, buttonVariants } from '$lib/components/ui/button';
   import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '$lib/components/ui/card';
-  import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '$lib/components/ui/dialog';
   import { Input } from '$lib/components/ui/input';
   import { Label } from '$lib/components/ui/label';
   import { toast } from 'svelte-sonner';
@@ -17,6 +17,7 @@
   let selectedCharacter: V20DarkAgesCharacter | null = null;
 
   function createNewCharacter() {
+    console.log("createNewCharacter called.");
     if (!newCharName.trim()) return;
 
     const newChar: V20DarkAgesCharacter = {
@@ -71,7 +72,6 @@
 
 <div class="min-h-screen bg-zinc-950 text-zinc-100 p-8">
   <div class="max-w-7xl mx-auto">
-    <!-- Header -->
     <div class="flex items-center justify-between mb-12">
       <div>
         <h1 class="text-5xl font-bold tracking-tighter flex items-center gap-4">
@@ -80,32 +80,40 @@
         </h1>
         <p class="text-zinc-400 mt-3 text-xl">Client-side • No server • Eternal</p>
       </div>
-
-      <Dialog bind:open={showNewDialog}>
-        <DialogTrigger asChild>
-          <Button size="lg" class="bg-red-600 hover:bg-red-700 text-lg px-8">
-            <Plus class="mr-3 h-6 w-6" />
-            New Kindred
-          </Button>
-        </DialogTrigger>
-        <DialogContent class="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Create New Vampire</DialogTitle>
-            <DialogDescription>Enter the name of your new childe.</DialogDescription>
-          </DialogHeader>
-          <div class="py-6">
-            <Label for="name">Name</Label>
-            <Input id="name" bind:value={newCharName} placeholder="e.g. Lady Elysia of House Tremere" class="mt-2" />
-          </div>
-          <DialogFooter>
-            <Button variant="outline" on:click={() => showNewDialog = false}>Cancel</Button>
-            <Button on:click={createNewCharacter} disabled={!newCharName.trim()}>Embrace</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <Dialog.Root>
+        <Dialog.Trigger
+            type="button"
+            class={buttonVariants({ variant: "outline",}), "bg-red-800 hover:bg-red-900 text-lg px-24 justify-center rounded-3xl w-1/6 inline-flex whitespace-nowrap"}
+          >
+          <Plus class="h-6 w-6 shrink-0" />
+          New Kindred
+        </Dialog.Trigger>
+        <Dialog.Content class="sm:max-w-[425px]">
+          <form on:submit={createNewCharacter}>
+            <Dialog.Header>
+              <Dialog.Title>Create New Vampire</Dialog.Title>
+              <Dialog.Description>Enter the name of your new childe.</Dialog.Description>
+            </Dialog.Header>
+            <div class="grid gap-4">
+              <div class="grid gap-3">
+                <Label for="name">Name</Label>
+                <Input id="name" bind:value={newCharName} placeholder="e.g. Lady Elysia of House Tremere" class="mt-2" />
+              </div>
+            </div>
+            <Dialog.Footer>
+              <Dialog.Close
+                type="button"
+                class={buttonVariants({ variant: "outline" })}
+              >
+                Cancel
+              </Dialog.Close>
+              <Button type="submit">Embrace</Button>
+            </Dialog.Footer>
+          </form>
+          </Dialog.Content>
+      </Dialog.Root>
     </div>
 
-    <!-- Coterie Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {#each $characters as char (char.id)}
         <Card on:click={() => openSheet(char)} class="cursor-pointer bg-zinc-900 border-zinc-800 hover:border-red-900/70 hover:scale-[1.02] transition-all duration-300">
@@ -155,16 +163,15 @@
   </div>
 </div>
 
-<!-- Character Sheet Modal -->
-<Dialog bind:open={showSheet}>
-  <DialogContent class="max-w-[1100px] max-h-[95vh] p-0 bg-zinc-950 border border-zinc-800 overflow-hidden">
-    <DialogHeader class="p-8 border-b border-zinc-800">
-      <DialogTitle class="text-3xl">Character Sheet</DialogTitle>
-    </DialogHeader>
+<Dialog.Root bind:open={showSheet}>
+  <Dialog.Content class="max-w-[1100px] max-h-[95vh] p-0 bg-zinc-950 border border-zinc-800 overflow-hidden">
+    <Dialog.Header class="p-8 border-b border-zinc-800">
+      <Dialog.Title class="text-3xl">Character Sheet</Dialog.Title>
+    </Dialog.Header>
     {#if selectedCharacter}
       <CharacterSheet character={selectedCharacter} onSave={saveCharacter} />
     {/if}
-  </DialogContent>
-</Dialog>
+  </Dialog.Content>
+</Dialog.Root>
 
 <Toaster />
