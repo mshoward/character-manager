@@ -87,7 +87,7 @@
           New Kindred
         </Dialog.Trigger>
         <Dialog.Content class="sm:max-w-[425px]">
-          <form on:submit={createNewCharacter}>
+          <form on:submit|preventDefault={createNewCharacter}>
             <Dialog.Header>
               <Dialog.Title>Create New Vampire</Dialog.Title>
               <Dialog.Description>Enter the name of your new childe.</Dialog.Description>

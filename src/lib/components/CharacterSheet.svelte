@@ -121,7 +121,7 @@
           </CardTitle>
         </CardHeader>
         <CardContent class="pt-8 space-y-10">
-          <form on:submit={rollDice}>
+          <form on:submit|preventDefault={rollDice}>
             <div class="grid grid-cols-2 gap-12">
                 <div>
                 <Label for="dice-pool" class="block text-sm text-zinc-400 mb-4">Dice Pool</Label>
