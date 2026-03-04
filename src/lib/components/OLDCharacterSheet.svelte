@@ -13,7 +13,7 @@
   export let character: V20DarkAgesCharacter;
   export let onSave: (updated: V20DarkAgesCharacter) => void;
 
-  // Dice roller state
+  // Dice roller
   let dicePool = 5;
   let difficulty = 6;
   let rollResults: number[] = [];
@@ -35,22 +35,16 @@
     isBotch = successes === 0 && ones > 0;
 
     if (isBotch) {
-      toast.error('💀 BOTCH!', {
-        description: `${dicePool}d10 @ diff ${difficulty}`,
-      });
+      toast.error('💀 BOTCH!', { description: `${dicePool}d10 @ diff ${difficulty}` });
     } else {
-      toast.success(`${successes} Success${successes === 1 ? '' : 'es'}`, {
-        description: `${dicePool}d10 @ diff ${difficulty}`,
-      });
+      toast.success(`${successes} Success${successes === 1 ? '' : 'es'}`, { description: `${dicePool}d10 @ diff ${difficulty}` });
     }
   }
 
   function saveChanges() {
     character.updatedAt = new Date().toISOString();
     onSave(character);
-    toast.success('Saved to Chronicle', {
-      description: `${character.name} updated.`,
-    });
+    toast.success('Saved to Chronicle', { description: `${character.name} updated.` });
   }
 </script>
 
@@ -74,7 +68,6 @@
       <TabsTrigger value="notes">Notes</TabsTrigger>
     </TabsList>
 
-    <!-- (the rest of your tabs are unchanged and beautiful) -->
     <TabsContent value="overview" class="mt-8">
       <Card class="bg-zinc-900 border-zinc-800">
         <CardContent class="pt-8 grid grid-cols-3 gap-12 text-center">
@@ -176,9 +169,9 @@
       </Card>
     </TabsContent>
 
-    <TabsContent value="powers" class="mt-8 text-zinc-400">Disciplines & full power lists coming in the next update.</TabsContent>
+    <TabsContent value="powers" class="mt-8 text-zinc-400">Disciplines coming next update.</TabsContent>
     <TabsContent value="notes" class="mt-8">
-      <Textarea bind:value={character.notes} placeholder="Scribe your secrets, sins, and session notes here..." class="min-h-[300px] bg-zinc-950 border-zinc-800 text-lg" />
+      <Textarea bind:value={character.notes} placeholder="Scribe your secrets..." class="min-h-[300px] bg-zinc-950 border-zinc-800 text-lg" />
     </TabsContent>
   </Tabs>
 </div>
