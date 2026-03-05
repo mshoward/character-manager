@@ -22,7 +22,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        Character Manager
+        <Link to="/">Character Manager</Link>
       </SidebarHeader>
       <SidebarContent>
         <Collapsible className="group/collapsible">

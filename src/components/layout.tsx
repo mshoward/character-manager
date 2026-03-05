@@ -12,17 +12,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <AppSidebar />
           <main>
             <SidebarTrigger />
-            {children}
+              {/* Main content area - new pages load here! */}
+              <div className="flex-1 p-8">
+                <Outlet />
+              </div>
           </main>
         </SidebarProvider>
-        <div className="w-64 border-r p-6">
-          <h1 className="text-2xl font-bold">Character Manager</h1>
-          {/* Navigation links will go here */}
-        </div>
-        {/* Main content area - new pages load here! */}
-        <div className="flex-1 p-8">
-          <Outlet />
-        </div>
       </div>
     </ThemeProvider>
   )

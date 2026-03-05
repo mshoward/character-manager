@@ -8,7 +8,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty"
 import { ArrowUpRightIcon, Folder } from "lucide-react"
-export function EmptyDemo() {
+export function NewCharacter() {
   return (
     <Empty>
       <EmptyHeader>
@@ -37,4 +37,5 @@ export function EmptyDemo() {
       </Button>
     </Empty>
   )
-}
+};
+export default NewCharacter;
