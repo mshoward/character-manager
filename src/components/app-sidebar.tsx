@@ -1,4 +1,5 @@
 import * as React from "react"
+import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import {ChevronDown, ChevronsUpDown, Pen, Plus} from "lucide-react"
 import {
@@ -37,7 +38,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <a href="#">Character Sheet <Plus className="m-auto"/> </a>
+                      <Link to="/new-character">New Character Sheet <Plus className="m-auto"/></Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 </SidebarMenu>
