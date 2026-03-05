@@ -2,12 +2,11 @@ import { ComponentExample } from "@/components/component-example";
 import {ThemeProvider } from "@/components/theme-provider"
 
 export function App() {
-return 
-(
+return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <ComponentExample />
     </ThemeProvider>
-);
+    );
 }
 
 export default App;
