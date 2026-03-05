@@ -7,7 +7,8 @@
   import { Slider } from '$lib/components/ui/slider';
   import { Textarea } from '$lib/components/ui/textarea';
   import { toast } from 'svelte-sonner';
-  import { Dice6, Save } from 'lucide-svelte';
+  import { Dice6, Save, Download, Upload } from 'lucide-svelte';
+  import Papa from 'papaparse';
 
   export let character: V20DarkAgesCharacter;
   export let onSave: (updated: V20DarkAgesCharacter) => void;
@@ -45,17 +46,57 @@
     onSave(character);
     toast.success('Saved to Chronicle', { description: `${character.name} updated.` });
   }
+  // CSV Export
+  function exportCharacter() {
+    const csv = Papa.unparse([character]);
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${character.name.replace(/[^a-z0-9]/gi, '_')}.csv`;
+    a.click();
+    toast.success('Exported', { description: `${character.name}.csv downloaded` });
+  }
+
+  // CSV Import (for this character only - updates current sheet)
+  function importCharacter(e: Event) {
+    console.log('importCharacter called', e);
+    const file = (e.target as HTMLInputElement).files?.[0];
+    let file2 = HTMLInputElement
+    if (!file) return;
+
+    Papa.parse(file, {
+      header: true,
+      complete: (results) => {
+        const imported = results.data[0] as V20DarkAgesCharacter;
+        Object.assign(character, imported);
+        saveChanges();
+        toast.success('Imported', { description: 'Character data loaded from CSV' });
+      }
+    });
+  }
 </script>
 
 <div class="max-w-5xl mx-auto p-8 space-y-10">
   <div class="flex justify-between items-center border-b border-zinc-800 pb-6">
-    <div>
-      <h1 class="text-5xl font-bold text-red-500 tracking-tighter">{character.name}</h1>
-      <p class="text-xl text-zinc-400 mt-1">{character.clan} • Generation {character.generation}</p>
-    </div>
-    <Button on:click={saveChanges} size="lg" class="bg-red-600 hover:bg-red-700 text-lg px-8">
-      <Save class="mr-3 h-5 w-5" /> Save to the Ages
-    </Button>
+    <form>
+      <div>
+        <h1 class="text-5xl font-bold text-red-500 tracking-tighter">{character.name}</h1>
+        <p class="text-xl text-zinc-400 mt-1">{character.clan} • Generation {character.generation}</p>
+      </div>
+      <Button onclick={exportCharacter} variant="outline">
+        <Download class="mr-2 h-4 w-4" /> Export CSV
+      </Button>
+      <label class="cursor-pointer">
+        <Button onclick={importCharacter} type=file variant="outline" as="span">
+          <Upload class="mr-2 h-4 w-4" /> Import CSV
+          <input type="file" accept=".csv"/>
+        </Button>
+      </label>
+      <Button onclick={saveChanges} size="lg" class="bg-red-600 hover:bg-red-700 text-lg px-8">
+        <Save class="mr-3 h-5 w-5" /> Save to the Ages
+      </Button>
+    </form>
   </div>
 
   <Tabs value="rolls" class="w-full">
